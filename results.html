@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - ESG Performance Insights</title>
+    <style>
+        :root {
+            --primary-blue: #0066cc;
+            --dark-blue: #001a33;
+            --light-blue: #e6f2ff;
+            --white: #ffffff;
+            --black: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--dark-blue);
+            min-width: 1024px;
+            max-width: 1920px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: var(--dark-blue);
+            padding: 0.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            color: var(--white);
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .results-main {
+            flex: 1;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .cluster-info {
+            background: linear-gradient(135deg, var(--dark-blue), var(--primary-blue));
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .cluster-info h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cluster-info p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-section {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .results-section h2 {
+            color: var(--dark-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-blue);
+        }
+
+        .results-table th {
+            background: var(--dark-blue);
+            color: var(--white);
+        }
+
+        .results-table tr:hover {
+            background-color: var(--light-blue);
+        }
+
+        .suggestions-list {
+            list-style: none;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .suggestions-list li {
+            background: var(--light-blue);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            background: var(--dark-blue);
+            color: var(--white);
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="logo">🌍 ESG Performance Insights</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Methodology</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="results-main">
+        <div class="cluster-info">
+            <h1>📊 ESG Analysis Results</h1>
+            <p><strong>Assigned Cluster:</strong> {{ cluster }}</p>
+            <p><strong>Description:</strong> {{ cluster_descriptions[cluster] }}</p>
+        </div>
+
+        <section class="results-section">
+            <h2>📍 Peer Companies Analysis</h2>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Total ESG</th>
+                        <th>Environment</th>
+                        <th>Social</th>
+                        <th>Governance</th>
+                        <th>Controversy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for peer in peers %}
+                    <tr>
+                        <td>{{ peer['Ticker'] }}</td>
+                        <td>{{ "%.1f"|format(peer['totalEsg']) }}</td>
+                        <td>{{ "%.1f"|format(peer['environmentScore']) }}</td>
+                        <td>{{ "%.1f"|format(peer['socialScore']) }}</td>
+                        <td>{{ "%.1f"|format(peer['governanceScore']) }}</td>
+                        <td>{{ peer['highestControversy'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="results-section">
+            <h2>💡 Recommendations for Improvement</h2>
+            <ul class="suggestions-list">
+                {% for suggestion in suggestions %}
+                <li>{{ suggestion }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Home</a>
+                <a href="#">Methodology</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <p>© 2025 ESG Performance Insights</p>
+        </div>
+    </footer>
+</body>
+</html>
